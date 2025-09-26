@@ -23,3 +23,13 @@ body,
   background: var(--bg);
   color: var(--fg);
 }
+@keyframes scrollAds {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+

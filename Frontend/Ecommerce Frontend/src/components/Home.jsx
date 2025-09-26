@@ -51,7 +51,7 @@ const Home = ({ selectedCategory }) => {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/ads");
+        const response = await axios.get("http://localhost:8083/ads");
         setAds(response.data);
       } catch (error) {
         console.error("Error fetching advertisements:", error);
@@ -78,51 +78,74 @@ const Home = ({ selectedCategory }) => {
 
   return (
   <div style={{ paddingTop: "60px" }}> {/* <-- Add padding equal to navbar height */}
-    {/* Advertisements Banner */}
-    {ads.length > 0 && (
-      <div
-        className="ads-banner"
-        style={{
-          display: "flex",
-          overflowX: "auto",
-          gap: "10px",
-          padding: "10px 20px",
-          marginTop: "60px",
-        }}
-      >
-        {ads.map((ad) => (
-          <a
-            key={ad.id}
-            href={ad.redirectUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ flex: "0 0 auto" }}
-          >
-            <img
-              src={ad.imageUrl}
-              alt={ad.title}
-              style={{
-                height: "120px",
-                width: "250px",
-                objectFit: "cover",
-                borderRadius: "10px",
-              }}
-            />
-          </a>
-        ))}
-      </div>
-    )}
+    {/* Advertisement Section */}
+{ads.length > 0 && (
+  <div
+    style={{
+      overflow: "hidden",
+      // background: "#f8f8f8",
+      padding: "20px 0",
+      // borderBottom: "1px solid #eaeaea",
+    }}
+  >
+    <div
+      style={{
+        display: "inline-flex",
+        gap: "20px",
+        paddingLeft: "10px",
+        animation: "scrollAds 25s linear infinite",
+      }}
+    >
+      {[...ads, ...ads].map((ad, index) => (
+        <a
+          key={index}
+          href={ad.redirectUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            flex: "0 0 auto",
+            display: "inline-block",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.08)";
+            e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          <img
+            src={ad.imageUrl}
+            alt={ad.title}
+            style={{
+              height: "170px",
+              width: "260px",
+              objectFit: "fill",
+              borderRadius: "12px",
+              transition: "transform 0.3s ease",
+            }}
+          />
+        </a>
+      ))}
+    </div>
+  </div>
+)}
+
+
 
     {/* Products Grid */}
     <div
-      className="grid"
-      style={{
-        marginTop: "20px",
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-        gap: "20px",
-        padding: "20px",
-      }}
+  className="grid"
+  style={{
+    marginTop: "20px",      // current
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "20px",
+    padding: "20px",
+    paddingTop: "40px",     // <-- add this to push the cards lower
+  }}
     >
       {filteredProducts.length === 0 ? (
         <h2

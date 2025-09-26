@@ -600,12 +600,13 @@ span {
 }
 .left-column-img {
   vertical-align: middle;
-  max-width: 30rem;
+  max-width: 40rem;
   max-height: 30rem;
   padding-top: 6rem;
+  background-color: var(--root_background);
   margin: 20px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(2, 8, 23, 0.25);
+  /* box-shadow: 0 8px 24px rgba(2, 8, 23, 0.25); */
 }
 .left-column {
   width: 40%;
