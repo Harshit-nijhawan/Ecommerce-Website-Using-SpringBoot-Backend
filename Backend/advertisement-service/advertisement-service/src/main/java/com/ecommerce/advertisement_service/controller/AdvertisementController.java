@@ -2,6 +2,8 @@ package com.ecommerce.advertisement_service.controller;
 
 import com.ecommerce.advertisement_service.model.Advertisement;
 import com.ecommerce.advertisement_service.service.AdvertisementService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +41,9 @@ public class AdvertisementController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAd(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAd(@PathVariable Long id) {
+
         service.deleteAd(id);
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 }
