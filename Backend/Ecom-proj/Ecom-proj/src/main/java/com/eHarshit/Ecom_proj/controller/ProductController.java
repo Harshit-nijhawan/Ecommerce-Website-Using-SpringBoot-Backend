@@ -21,39 +21,42 @@ public class ProductController {
     private ProductService service;
 
     @RequestMapping("/")
-    public String greet(){
+    public String greet() {
         return "Hello World";
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts(){
+    public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity<>(service.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable int id){
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
         Product product = service.getProductById(id);
-        if(product != null){
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return product != null ?
+                new ResponseEntity<>(product, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping(value = "/product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Product> addProduct(
+    public ResponseEntity<?> addProduct(
             @RequestPart("product") String productJson,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
-    ) throws Exception {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product product = objectMapper.readValue(productJson, Product.class);
-        Product savedProduct = service.saveProduct(product, imageFile);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    ) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+            Product savedProduct = service.saveProduct(product, imageFile);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding product: " + e.getMessage());
+        }
     }
 
     @GetMapping("/product/{productId}/image")
-    public ResponseEntity<byte[]> getImageByProductId(@PathVariable int productId){
+    public ResponseEntity<byte[]> getImageByProductId(@PathVariable int productId) {
         Product product = service.getProductById(productId);
         if (product == null || product.getImageData() == null) {
             return ResponseEntity.notFound().build();
@@ -64,33 +67,40 @@ public class ProductController {
     }
 
     @PutMapping(value = "/product/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateProduct(
+    public ResponseEntity<?> updateProduct(
             @PathVariable int id,
             @RequestPart("product") String productJson,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws Exception {
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product updatedProduct = objectMapper.readValue(productJson, Product.class);
+            Product product1 = service.updateProduct(id, updatedProduct, imageFile);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product updatedProduct = objectMapper.readValue(productJson, Product.class);
-        Product product1 = service.updateProduct(id, updatedProduct, imageFile);
-
-        if (product1 != null) {
-            return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
+            if (product1 != null) {
+                return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating product: " + e.getMessage());
         }
-        return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable int id){
-        Product product = service.getProductById(id);
-        if(product != null){
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
+        try {
             service.deleteProduct(id);
-            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/products/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword){
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
         return new ResponseEntity<>(service.searchProducts(keyword), HttpStatus.OK);
     }
 }

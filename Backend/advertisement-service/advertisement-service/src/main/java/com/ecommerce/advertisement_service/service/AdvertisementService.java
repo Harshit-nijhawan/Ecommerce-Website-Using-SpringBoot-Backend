@@ -24,17 +24,29 @@ public class AdvertisementService {
         return repository.findById(id);
     }
 
+    // ✅ Prevent duplicates
     public Advertisement createAd(Advertisement ad) {
-        return repository.save(ad);
+        Optional<Advertisement> existingAd = repository.findByTitle(ad.getTitle());
+        if (existingAd.isPresent()) {
+            // Update existing ad instead of inserting new
+            Advertisement adv = existingAd.get();
+            adv.setDescription(ad.getDescription());
+            adv.setImageUrl(ad.getImageUrl());
+            adv.setActive(ad.isActive());
+            return repository.save(adv);
+        }
+        return repository.save(ad); // Insert new if not found
     }
 
     public Advertisement updateAd(Long id, Advertisement ad) {
         Advertisement existingAd = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+
         existingAd.setTitle(ad.getTitle());
         existingAd.setDescription(ad.getDescription());
         existingAd.setImageUrl(ad.getImageUrl());
         existingAd.setActive(ad.isActive());
+
         return repository.save(existingAd);
     }
 

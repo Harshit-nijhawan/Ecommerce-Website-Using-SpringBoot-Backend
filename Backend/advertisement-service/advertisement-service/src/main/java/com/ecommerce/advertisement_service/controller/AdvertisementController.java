@@ -41,9 +41,8 @@ public class AdvertisementController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAd(@PathVariable Long id) {
-
+    public boolean deleteAd(@PathVariable Long id) {
         service.deleteAd(id);
-        return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        return true; // ✅ returns boolean
     }
 }
