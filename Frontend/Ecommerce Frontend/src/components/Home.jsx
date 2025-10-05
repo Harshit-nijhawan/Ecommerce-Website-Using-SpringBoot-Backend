@@ -50,14 +50,15 @@ const Home = ({ selectedCategory }) => {
   // Fetch advertisements
   useEffect(() => {
     const fetchAds = async () => {
-      try {
-        const response = await axios.get("http://localhost:8083/ads");
-        setAds(response.data);
-      } catch (error) {
-        console.error("Error fetching advertisements:", error);
-      }
-    };
-    fetchAds();
+  try {
+    // Use the new environment variable for the ads service
+    const response = await axios.get(`${import.meta.env.VITE_ADS_API_URL}/ads` || "http://localhost:8083/ads");
+    setAds(response.data);
+  } catch (error) {
+    console.error("Error fetching advertisements:", error);
+  }
+};
+fetchAds();
   }, []);
 
   const filteredProducts = selectedCategory
