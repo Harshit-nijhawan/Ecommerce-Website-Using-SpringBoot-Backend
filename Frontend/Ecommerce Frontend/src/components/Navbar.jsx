@@ -15,9 +15,9 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [showSearchResults,setShowSearchResults] = useState(false)
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   // const fetchData = async (value) => {
   //   try {
