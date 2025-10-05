@@ -115,7 +115,7 @@ const Cart = () => {
         new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
       );
 
-      // 4. Send the PUT request using the correct endpoint
+      // 4. Send the PUT request using your configured axios instance
       await axios.put(`/product/${item.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
