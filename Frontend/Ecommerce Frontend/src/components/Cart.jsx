@@ -105,8 +105,8 @@ const Cart = () => {
         const updatedStockQuantity = item.stockQuantity - item.quantity;
         const updatedProductData = { ...rest, stockQuantity: updatedStockQuantity };
 
-        const formData = new FormData();
-        if (imageFile) formData.append("imageFile", imageFile); // Each product's image
+        // const formData = new FormData();
+        // if (imageFile) formData.append("imageFile", imageFile); // Each product's image
         formData.append(
           "product",
           new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
