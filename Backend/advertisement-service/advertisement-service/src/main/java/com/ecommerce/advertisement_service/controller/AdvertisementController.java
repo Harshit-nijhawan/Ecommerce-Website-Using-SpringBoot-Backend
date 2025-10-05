@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ads")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin
 public class AdvertisementController {
 
     private final AdvertisementService service;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Home from "./Home"
-import axios from "axios";
-// import { json } from "react-router-dom";
+import axios from "../axios";// import { json } from "react-router-dom";
 // import { BiSunFill, BiMoon } from "react-icons/bi";
 
 const Navbar = ({ onSelectCategory, onSearch }) => {
@@ -20,15 +19,15 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     fetchData();
   }, []);
 
-  const fetchData = async (value) => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/products");
-      setSearchResults(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const fetchData = async (value) => {
+  //   try {
+  //     const response = await axios.get(`/product/${id}`);
+  //     setSearchResults(response.data);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const handleChange = async (value) => {
     setInput(value);
@@ -36,7 +35,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
       setShowSearchResults(true)
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/products/search?keyword=${value}`
+        `/products/search?keyword=${value}`
       );
       setSearchResults(response.data);
       setNoResults(response.data.length === 0);

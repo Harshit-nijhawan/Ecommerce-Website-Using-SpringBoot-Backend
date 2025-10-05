@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import AppContext from "../Context/Context";
-import axios from "axios";
+import axios from "../axios";
 import CheckoutPopup from "./CheckoutPopup";
 import { Button } from "react-bootstrap";
 
@@ -20,7 +20,7 @@ const Cart = () => {
 
       try {
         // Fetch all products from backend
-        const response = await axios.get("http://localhost:8080/api/products");
+        const response = await axios.get("/products");
         const backendProducts = response.data;
 
         // Merge cart items with backend product data
@@ -37,7 +37,7 @@ const Cart = () => {
           updatedCartItems.map(async (item) => {
             try {
               const imageResponse = await axios.get(
-                `http://localhost:8080/api/product/${item.id}/image`,
+                `/product/${item.id}/image`,
                 { responseType: "blob" }
               );
 
@@ -112,7 +112,7 @@ const Cart = () => {
           new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
         );
 
-        await axios.put(`http://localhost:8080/api/product/${item.id}`, formData, {
+        await axios.put(`/product/${item.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       }
