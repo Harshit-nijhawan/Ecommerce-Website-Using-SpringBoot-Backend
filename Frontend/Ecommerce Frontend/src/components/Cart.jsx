@@ -101,27 +101,27 @@ const Cart = () => {
   const handleCheckout = async () => {
   try {
     for (const item of cartItems) {
-      // Prepare the product data, excluding image info
+      // 1. Prepare the product data, excluding image info
       const { imageUrl, imageFile, ...productData } = item;
       const updatedStockQuantity = productData.stockQuantity - productData.quantity;
       const updatedProductData = { ...productData, stockQuantity: updatedStockQuantity };
 
-      // Create the form data object
+      // 2. Create the form data object
       const formData = new FormData();
 
-      // Append only the product JSON, not the image file
+      // 3. IMPORTANT: Append only the product JSON, not the image file
       formData.append(
         "product",
         new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
       );
 
-      // Send the PUT request using the correct endpoint
+      // 4. Send the PUT request using the correct endpoint
       await axios.put(`/product/${item.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     }
 
-    // Clear the cart and show success message
+    // 5. Clear the cart and show success message
     clearCart();
     setCartItems([]);
     setShowModal(false);

@@ -5,8 +5,11 @@ function AdsBanner() {
   const [ads, setAds] = useState([]);
 
   useEffect(() => {
-  // Change this line to use the environment variable
-  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/ads` || "http://localhost:8080/api/ads") 
+  // Determine the correct base URL first
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
+  // Now, make the fetch call using the correct URL
+  fetch(`${apiUrl}/api/ads`)
     .then((res) => res.json())
     .then(setAds)
     .catch((err) => console.error("Failed to fetch ads:", err));
