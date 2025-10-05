@@ -99,33 +99,39 @@ const Cart = () => {
 
   // Checkout handler
   const handleCheckout = async () => {
-    try {
-      for (const item of cartItems) {
-        const { imageUrl, imageFile, ...rest } = item;
-        const updatedStockQuantity = item.stockQuantity - item.quantity;
-        const updatedProductData = { ...rest, stockQuantity: updatedStockQuantity };
+  try {
+    for (const item of cartItems) {
+      // Prepare the product data, excluding image info
+      const { imageUrl, imageFile, ...productData } = item;
+      const updatedStockQuantity = productData.stockQuantity - productData.quantity;
+      const updatedProductData = { ...productData, stockQuantity: updatedStockQuantity };
 
-        // const formData = new FormData();
-        // if (imageFile) formData.append("imageFile", imageFile); // Each product's image
-        formData.append(
-          "product",
-          new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
-        );
+      // Create the form data object
+      const formData = new FormData();
 
-        await axios.put(`/product/${item.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-      }
+      // Append only the product JSON, not the image file
+      formData.append(
+        "product",
+        new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
+      );
 
-      clearCart();
-      setCartItems([]);
-      setShowModal(false);
-      alert("Purchase confirmed!");
-    } catch (err) {
-      console.error("Error during checkout:", err);
-      alert("Checkout failed! Please try again.");
+      // Send the PUT request using the correct endpoint
+      await axios.put(`/product/${item.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     }
-  };
+
+    // Clear the cart and show success message
+    clearCart();
+    setCartItems([]);
+    setShowModal(false);
+    alert("Purchase confirmed!");
+
+  } catch (err) {
+    console.error("Error during checkout:", err);
+    alert("Checkout failed! Please try again.");
+  }
+};
 
   return (
     <div className="cart-container">
