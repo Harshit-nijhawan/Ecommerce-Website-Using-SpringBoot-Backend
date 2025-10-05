@@ -97,7 +97,7 @@ fetchAds();
         animation: "scrollAds 25s linear infinite",
       }}
     >
-      {[...ads, ...ads].map((ad, index) => (
+      {ads.map((ad, index) => (
         <a
           key={index}
           href={ad.redirectUrl}
