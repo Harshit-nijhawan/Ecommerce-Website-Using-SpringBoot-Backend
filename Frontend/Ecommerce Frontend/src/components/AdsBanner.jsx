@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./AdsBanner.css";
 
 function AdsBanner() {
-  const [ads, setAds] = useState([]);
-
   useEffect(() => {
   // Determine the correct base URL first
   const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
