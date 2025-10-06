@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import AddProduct from "./components/AddProduct";
 import Product from "./components/Product";
+import AuthContainer from "./components/AuthContainer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./Context/Context";
 import UpdateProduct from "./components/UpdateProduct";
@@ -53,6 +54,7 @@ function App() {
           <Route path="/product" element={<Product  />} />
           <Route path="product/:id" element={<Product  />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<AuthContainer />} />
           <Route path="/product/update/:id" element={<UpdateProduct />} />
         </Routes>
       </BrowserRouter>

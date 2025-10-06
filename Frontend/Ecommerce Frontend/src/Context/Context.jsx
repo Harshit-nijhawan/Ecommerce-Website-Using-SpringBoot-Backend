@@ -8,15 +8,25 @@ const AppContext = createContext({
   addToCart: (product) => {},
   removeFromCart: (productId) => {},
   refreshData:() =>{},
-  updateStockQuantity: (productId, newQuantity) =>{}
-  
+  clearCart:() =>{},
+  // == ADMIN ROLE ADDITIONS ==
+  isAdmin: false,
+  toggleAdminMode: () => {},
+  // ==========================
 });
 
 export const AppProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState("");
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
+  // == ADMIN ROLE ADDITIONS: Initialize and persist admin state in session storage ==
+  const [isAdmin, setIsAdmin] = useState(JSON.parse(sessionStorage.getItem('isAdmin')) || false);
 
+  const toggleAdminMode = () => {
+    const newState = !isAdmin;
+    setIsAdmin(newState);
+    sessionStorage.setItem('isAdmin', JSON.stringify(newState));
+  };
 
   const addToCart = (product) => {
     const existingProductIndex = cart.findIndex((item) => item.id === product.id);
@@ -65,7 +75,20 @@ export const AppProvider = ({ children }) => {
   }, [cart]);
   
   return (
-    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart,refreshData, clearCart  }}>
+    <AppContext.Provider 
+      value={{ 
+        data, 
+        isError, 
+        cart, 
+        addToCart, 
+        removeFromCart,
+        refreshData, 
+        clearCart,
+        // == ADMIN ROLE EXPORT ==
+        isAdmin,
+        toggleAdminMode
+        // =======================
+      }}>
       {children}
     </AppContext.Provider>
   );

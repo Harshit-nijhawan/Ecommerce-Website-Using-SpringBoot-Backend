@@ -852,3 +852,31 @@ html {
   outline-offset: 2px;
   box-shadow: 0 12px 30px rgba(2, 8, 23, 0.35);
 }
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  /* Make the ad banner scroll horizontally instead of showing a broken grid */
+  .ads-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .ad-card {
+    flex: 0 0 80%; /* Each ad takes up 80% of the screen width */
+    scroll-snap-align: center;
+  }
+
+  /* Adjust the main product grid for smaller screens */
+  .grid {
+    /* Switch to a single column layout */
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  /* Ensure product cards fit the single column */
+  .grid .card {
+    width: 100%; /* Make card take the full width of the column */
+    margin: 0 auto; /* Center the card */
+  }
+}
